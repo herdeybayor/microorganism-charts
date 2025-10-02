@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
+    "modern-screenshot": "^4.6.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-is": "^18.3.1",

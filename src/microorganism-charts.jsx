@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { domToPng } from 'modern-screenshot';
 
 const MicroorganismCharts = () => {
   const [chartType, setChartType] = useState('bar');
@@ -106,44 +107,22 @@ const MicroorganismCharts = () => {
     setOrganisms(newOrganisms);
   };
 
-  const downloadChart = () => {
+  const downloadChart = async () => {
     if (!chartRef.current) return;
-    
-    // Find the SVG element in the chart
-    const svgElement = chartRef.current.querySelector('svg');
-    if (!svgElement) return;
-    
-    // Get SVG data
-    const svgData = new XMLSerializer().serializeToString(svgElement);
-    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-    const svgUrl = URL.createObjectURL(svgBlob);
-    
-    // Create canvas
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    
-    img.onload = () => {
-      canvas.width = img.width * 2;
-      canvas.height = img.height * 2;
-      ctx.scale(2, 2);
-      ctx.fillStyle = '#f9fafb';
-      ctx.fillRect(0, 0, img.width, img.height);
-      ctx.drawImage(img, 0, 0);
-      
-      // Download
-      canvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.download = `${chartTitle.replace(/\s+/g, '_')}_chart.png`;
-        link.href = url;
-        link.click();
-        URL.revokeObjectURL(url);
-        URL.revokeObjectURL(svgUrl);
+
+    try {
+      const dataUrl = await domToPng(chartRef.current, {
+        backgroundColor: '#f9fafb',
+        scale: 2
       });
-    };
-    
-    img.src = svgUrl;
+
+      const link = document.createElement('a');
+      link.download = `${chartTitle.replace(/\s+/g, '_')}_chart.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error('Error generating chart image:', error);
+    }
   };
 
   const downloadLegend = () => {
