@@ -405,6 +405,18 @@ const MicroorganismCharts = () => {
           <li>Click "Download Legend" to save the legend as a separate PNG image</li>
         </ul>
       </div>
+
+      <div className="mt-4 text-center text-sm text-gray-600">
+        Built with ❤️ by{' '}
+        <a
+          href="https://sherifdeenadebayo.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:text-blue-800 font-medium"
+        >
+          herdeybayor
+        </a>
+      </div>
     </div>
   );
 };
